@@ -1,0 +1,47 @@
+# Zameen Scraper Code Evaluation
+
+## 1. Modularity Checklist
+- [x] Are the modules highly cohesive (each module has a single, well-defined purpose)?
+      *Mostly followed. However, `main()` is doing a lot of heavy lifting by managing thread pools, orchestrating phases, and handling file I/O directly.*
+- [ ] Is the coupling between modules low (minimal and explicit dependencies between them)?
+      *Not fully followed. `scrape_slugs_from_start_url` is tightly coupled to shared state (`collected_slugs` list and `slug_lock`), which it mutates directly rather than returning values for the caller to handle.*
+- [x] Does each module hide its internal implementation details (Information Hiding/Encapsulation)?
+      *Followed. Functions handle their own specific domains well.*
+- [x] Are interfaces between modules well-defined, simple, and stable?
+      *Followed. Function signatures and type hints are mostly clear.*
+- [ ] Can individual modules be tested independently of the rest of the system?
+      *Not followed. `extract_property_features` makes active HTTP requests inside the function. Passing HTML/BeautifulSoup directly into the parser instead of a slug/session would make it testable offline.*
+- [x] Can you replace or upgrade one module without needing to modify others?
+      *Followed. For example, `find_hydrated_state` could be swapped easily.*
+
+## 2. Readability Checklist
+- [x] Are variable, function, and class names descriptive, clear, and intention-revealing?
+      *Followed. Names like `collect_property_slugs` are excellent.*
+- [x] Is the code formatting consistent (indentation, spacing, brace placement) according to standard style guides?
+      *Followed. Standard PEP 8 practices are mostly respected.*
+- [x] Are complex expressions broken down into smaller, well-named intermediate variables or functions?
+      *Followed.*
+- [ ] Are comments used to explain *why* a decision was made, rather than restating *what* the code does?
+      *Not fully followed. Comments like `# Extract city name` or `# Flatten all amenity groups` only state what the code is doing, which is already obvious from the code itself.*
+- [ ] Are functions short, fitting on a single screen, and focused on a single task?
+      *Not followed. `extract_property_features` is over 70 lines long and handles multiple responsibilities (fetching, decoding state, deeply extracting specific features). `scrape_slugs_from_start_url` is also quite long.*
+- [ ] Is the logic flow straightforward, avoiding deep nesting (arrow code) and overly complex conditionals?
+      *Not followed. `scrape_slugs_from_start_url` has deep "arrow code" nesting (while -> with -> if -> try -> with -> for -> if).*
+- [x] Are standard idioms and patterns of the programming language followed?
+      *Followed.*
+
+## 3. Maintainability Checklist
+- [ ] Is the codebase well-documented at a high level (Architecture overview, README, setup instructions)?
+      *Not followed. There is no module-level docstring explaining the architecture, the scraping phases, or the concurrency model.*
+- [ ] Are there automated tests (unit, integration) that verify functionality and catch regressions quickly?
+      *Not followed. No tests exist.*
+- [x] Is the code structured to minimize the "blast radius" of changes (changes in one place don't break unrelated features)?
+      *Followed.*
+- [ ] Are magic numbers and hardcoded strings extracted into named constants or configuration files?
+      *Not fully followed. While top-level settings are constants, there are magic numbers inside functions like `timeout=20`, `level == 2`, `(403, 429)`, and heavily hardcoded dictionary string keys.*
+- [ ] Is duplicated logic avoided by extracting common functionality (DRY - Don't Repeat Yourself)?
+      *Not fully followed. `requests.Session(impersonate="chrome")` is initialized in multiple places, making it hard to globally change session settings later.*
+- [ ] Are error handling and logging implemented robustly and consistently across the system?
+      *Not followed. The script uses raw `print` statements with ANSI codes for logging. It should use Python's built-in `logging` module so logs can be properly formatted, written to a file, or disabled entirely.*
+- [ ] Does the design follow established object-oriented or functional design principles (e.g., SOLID principles)?
+      *Not followed. A class-based structure (e.g. `ZameenScraper` and `ZameenParser`) would encapsulate the threading state and configuration much better than passing locks and lists around procedurally.*

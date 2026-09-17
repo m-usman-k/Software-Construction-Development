@@ -1,0 +1,36 @@
+# Software Construction & Development: Key Principles
+
+## 1. Modularity
+Modularity is the degree to which a system's components may be separated and recombined, often with the benefit of flexibility and variety in use. In software, it means dividing a program into smaller, independent, and interchangeable modules, each responsible for a single, distinct part of the functionality.
+
+### Modularity Checklist
+- [ ] Are the modules highly cohesive (each module has a single, well-defined purpose)?
+- [ ] Is the coupling between modules low (minimal and explicit dependencies between them)?
+- [ ] Does each module hide its internal implementation details (Information Hiding/Encapsulation)?
+- [ ] Are interfaces between modules well-defined, simple, and stable?
+- [ ] Can individual modules be tested independently of the rest of the system?
+- [ ] Can you replace or upgrade one module without needing to modify others?
+
+## 2. Readability
+Readability refers to how easily a human reader (including the original author in the future) can understand the source code. Code is read much more often than it is written. High readability reduces the cognitive load for developers trying to maintain, debug, or extend the code.
+
+### Readability Checklist
+- [ ] Are variable, function, and class names descriptive, clear, and intention-revealing?
+- [ ] Is the code formatting consistent (indentation, spacing, brace placement) according to standard style guides?
+- [ ] Are complex expressions broken down into smaller, well-named intermediate variables or functions?
+- [ ] Are comments used to explain *why* a decision was made, rather than restating *what* the code does?
+- [ ] Are functions short, fitting on a single screen, and focused on a single task?
+- [ ] Is the logic flow straightforward, avoiding deep nesting (arrow code) and overly complex conditionals?
+- [ ] Are standard idioms and patterns of the programming language followed?
+
+## 3. Maintainability
+Maintainability is the ease with which a software system or component can be modified to correct faults, improve performance, or adapt to a changed environment. Highly maintainable code is cost-effective and safer to modify over the software's lifecycle.
+
+### Maintainability Checklist
+- [ ] Is the codebase well-documented at a high level (Architecture overview, README, setup instructions)?
+- [ ] Are there automated tests (unit, integration) that verify functionality and catch regressions quickly?
+- [ ] Is the code structured to minimize the "blast radius" of changes (changes in one place don't break unrelated features)?
+- [ ] Are magic numbers and hardcoded strings extracted into named constants or configuration files?
+- [ ] Is duplicated logic avoided by extracting common functionality (DRY - Don't Repeat Yourself)?
+- [ ] Are error handling and logging implemented robustly and consistently across the system?
+- [ ] Does the design follow established object-oriented or functional design principles (e.g., SOLID principles)?
