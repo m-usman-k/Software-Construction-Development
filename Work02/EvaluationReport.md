@@ -1,150 +1,186 @@
 # Zameen Scraper Evaluation Report
 
 **GitHub Repository:**  
-<a href="https://github.com/m-usman-k/Software-Construction-Development/tree/main/Work02">View the Original & Refactored Source Code here</a>
+<a href="https://github.com/m-usman-k/Software-Construction-Development/tree/main/Work02">View the Source Code on GitHub</a>
+
+---
+
+# PART 1: BEFORE REFACTORING
 
 ## 1. Modularity
 
-**Are the modules highly cohesive?** (Each module has a single, well-defined purpose)  
-**Before Refactoring:**  
-- [BEFORE_PASS]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Original code: Mostly followed, but `main` did too much heavy lifting. Refactored code: Classes clearly define responsibilities.*
+**Are the modules highly cohesive?**  
+[FAIL]  
+*The main orchestrator function was doing a lot of heavy lifting by managing thread pools, orchestrating phases, and handling file I/O directly.*
 
-**Is the coupling between modules low?** (Minimal and explicit dependencies between them)  
-**Before Refactoring:**  
-- [BEFORE_FAIL]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Original code: Tightly coupled to shared state (lists/locks). Refactored code: `ZameenScraper` instance encapsulates all shared threading state.*
+**Is the coupling between modules low?**  
+[FAIL]  
+*The URL scraping function was tightly coupled to shared state (lists and locks), which it mutated directly rather than returning values for the caller to handle.*
 
-**Does each module hide its internal implementation details?** (Information Hiding/Encapsulation)  
-**Before Refactoring:**  
-- [BEFORE_PASS]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Original code: Functions handled their specific domains well. Refactored code: Classes further improve encapsulation.*
+**Does each module hide its internal implementation details?**  
+[PASS]  
+*Functions handled their own specific domains well.*
 
 **Are interfaces between modules well-defined, simple, and stable?**  
-**Before Refactoring:**  
-- [BEFORE_PASS]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Both versions maintain clear, typed function/method signatures.*
+[PASS]  
+*Function signatures and type hints were mostly clear.*
 
 **Can individual modules be tested independently of the rest of the system?**  
-**Before Refactoring:**  
-- [BEFORE_FAIL]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Original code: Extraction functions made live HTTP requests internally. Refactored code: `ZameenParser` operates purely on string/soup inputs, making it fully unit-testable offline.*
+[FAIL]  
+*The property features extraction made active HTTP requests inside the function, making it difficult to test offline.*
 
 **Can you replace or upgrade one module without needing to modify others?**  
-**Before Refactoring:**  
-- [BEFORE_PASS]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Both versions allow swapping specific extraction logic easily.*
+[PASS]  
+*For example, the function locating the hydrated state could be swapped easily.*
 
 ## 2. Readability
 
 **Are variable, function, and class names descriptive, clear, and intention-revealing?**  
-**Before Refactoring:**  
-- [BEFORE_PASS]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Both versions use highly descriptive names.*
+[PASS]  
+*Variables and function names were excellent.*
 
 **Is the code formatting consistent according to standard style guides?**  
-**Before Refactoring:**  
-- [BEFORE_PASS]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Both versions respect standard PEP 8 practices.*
+[PASS]  
+*Standard formatting practices were mostly respected.*
 
 **Are complex expressions broken down into smaller, well-named intermediate variables or functions?**  
-**Before Refactoring:**  
-- [BEFORE_PASS]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Both versions successfully break down complex dictionary navigations.*
+[PASS]  
+*Complex dictionary navigations were broken down.*
 
 **Are comments used to explain *why* a decision was made, rather than restating *what* the code does?**  
-**Before Refactoring:**  
-- [BEFORE_FAIL]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Original code: Comments merely restated obvious code actions. Refactored code: Comments explain reasons behind design decisions (e.g., impersonating Chrome to bypass WAF).*
+[FAIL]  
+*Many comments only stated what the code was doing, which was already obvious from the code itself.*
 
 **Are functions short, fitting on a single screen, and focused on a single task?**  
-**Before Refactoring:**  
-- [BEFORE_FAIL]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Original code: Functions were over 70 lines long doing multiple things. Refactored code: Broken down into `_extract_location`, `_extract_basic_info`, etc.*
+[FAIL]  
+*The property feature extraction was over 70 lines long and handled multiple responsibilities. The category scraping was also quite long.*
 
 **Is the logic flow straightforward, avoiding deep nesting and overly complex conditionals?**  
-**Before Refactoring:**  
-- [BEFORE_FAIL]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Original code: Massive "arrow code" nesting in the crawler loop. Refactored code: Flattened by extracting the page processing logic into `_process_search_page`.*
+[FAIL]  
+*The slug gathering loop had deep "arrow code" nesting (multiple nested loops and conditions).*
 
 **Are standard idioms and patterns of the programming language followed?**  
-**Before Refactoring:**  
-- [BEFORE_PASS]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Both versions follow standard idioms.*
+[PASS]  
+*Standard idioms were followed.*
 
 ## 3. Maintainability
 
-**Is the codebase well-documented at a high level?** (Architecture overview, README)  
-**Before Refactoring:**  
-- [BEFORE_FAIL]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Original code: No high-level documentation. Refactored code: Classes include descriptive docstrings explaining their architectural role.*
+**Is the codebase well-documented at a high level?**  
+[FAIL]  
+*There was no module-level documentation explaining the architecture, the scraping phases, or the concurrency model.*
 
-**Are there automated tests (unit, integration) that verify functionality and catch regressions quickly?**  
-**Before Refactoring:**  
-- [BEFORE_FAIL]  
-**After Refactoring:**  
-- [AFTER_FAIL]  
-*No tests are provided in either version (though the refactored code makes it possible).*
+**Are there automated tests (unit, integration) that verify functionality?**  
+[FAIL]  
+*No tests existed.*
 
 **Is the code structured to minimize the "blast radius" of changes?**  
-**Before Refactoring:**  
-- [BEFORE_PASS]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Changes in extraction logic do not break the crawling orchestrator in either version.*
+[PASS]  
+*Changes in extraction logic did not break the crawling orchestrator.*
 
 **Are magic numbers and hardcoded strings extracted into named constants or configuration files?**  
-**Before Refactoring:**  
-- [BEFORE_FAIL]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Original code: Inline timeouts and retry limits. Refactored code: Moved to uppercase constants at the top of the file.*
+[FAIL]  
+*While top-level settings were constants, there were magic numbers inside functions like timeouts and specific network error codes.*
 
-**Is duplicated logic avoided by extracting common functionality?** (DRY)  
-**Before Refactoring:**  
-- [BEFORE_FAIL]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Original code: Network sessions initialized repeatedly. Refactored code: Handled centrally.*
+**Is duplicated logic avoided by extracting common functionality?**  
+[FAIL]  
+*Network sessions were initialized in multiple places, making it hard to globally change session settings later.*
 
-**Are error handling and logging implemented robustly and consistently across the system?**  
-**Before Refactoring:**  
-- [BEFORE_FAIL]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Original code: Raw terminal print statements with manual ANSI codes. Refactored code: Standard Python `logging` module utilized.*
+**Are error handling and logging implemented robustly and consistently?**  
+[FAIL]  
+*The script used raw terminal print statements instead of built-in logging modules.*
 
-**Does the design follow established object-oriented or functional design principles?** (e.g., SOLID)  
-**Before Refactoring:**  
-- [BEFORE_FAIL]  
-**After Refactoring:**  
-- [AFTER_PASS]  
-*Original code: Procedural, passing global locks around. Refactored code: Object-Oriented, separating Parsing from Scraping logic.*
+**Does the design follow established object-oriented or functional design principles?**  
+[FAIL]  
+*Procedural design passed locks and lists around instead of encapsulating them in a class.*
+
+---
+
+<pdf:nextpage />
+
+# PART 2: AFTER REFACTORING
+
+## 1. Modularity
+
+**Are the modules highly cohesive?**  
+[PASS]  
+*Perfectly encapsulated. The `ZameenScraper` and `ZameenParser` classes clearly define responsibilities.*
+
+**Is the coupling between modules low?**  
+[PASS]  
+*`ZameenScraper` instance encapsulates all shared threading state, completely decoupling the parser logic.*
+
+**Does each module hide its internal implementation details?**  
+[PASS]  
+*Classes further improve encapsulation.*
+
+**Are interfaces between modules well-defined, simple, and stable?**  
+[PASS]  
+*Clear, typed function and method signatures are maintained.*
+
+**Can individual modules be tested independently of the rest of the system?**  
+[PASS]  
+*`ZameenParser` now operates purely on string/soup inputs, making it fully unit-testable offline without HTTP requests.*
+
+**Can you replace or upgrade one module without needing to modify others?**  
+[PASS]  
+*Extraction logic can be swapped easily by just modifying static methods.*
+
+## 2. Readability
+
+**Are variable, function, and class names descriptive, clear, and intention-revealing?**  
+[PASS]  
+*Descriptive naming conventions have been maintained.*
+
+**Is the code formatting consistent according to standard style guides?**  
+[PASS]  
+*Standard PEP 8 practices are respected.*
+
+**Are complex expressions broken down into smaller, well-named intermediate variables or functions?**  
+[PASS]  
+*Complex navigations are successfully broken down.*
+
+**Are comments used to explain *why* a decision was made, rather than restating *what* the code does?**  
+[PASS]  
+*Comments now explain the reasons behind design decisions (e.g., impersonating Chrome to bypass WAF).*
+
+**Are functions short, fitting on a single screen, and focused on a single task?**  
+[PASS]  
+*Functions were broken down into `_extract_location`, `_extract_basic_info`, etc., drastically reducing size.*
+
+**Is the logic flow straightforward, avoiding deep nesting and overly complex conditionals?**  
+[PASS]  
+*Nesting was flattened by extracting the page processing logic into the `_process_search_page` method.*
+
+**Are standard idioms and patterns of the programming language followed?**  
+[PASS]  
+*Standard idioms are followed consistently.*
+
+## 3. Maintainability
+
+**Is the codebase well-documented at a high level?**  
+[PASS]  
+*Classes include descriptive docstrings explaining their architectural role and overall purpose.*
+
+**Are there automated tests (unit, integration) that verify functionality?**  
+[FAIL]  
+*No tests are provided yet (though the refactored code makes testing trivially easy).*
+
+**Is the code structured to minimize the "blast radius" of changes?**  
+[PASS]  
+*Extraction logic updates will not affect the crawling orchestration engine.*
+
+**Are magic numbers and hardcoded strings extracted into named constants or configuration files?**  
+[PASS]  
+*Moved to uppercase constants at the top of the file (e.g., `MAX_RETRIES`, `HTTP_TIMEOUT`).*
+
+**Is duplicated logic avoided by extracting common functionality?**  
+[PASS]  
+*Network sessions and locking mechanisms are managed centrally by the class.*
+
+**Are error handling and logging implemented robustly and consistently?**  
+[PASS]  
+*Standard Python `logging` module is now utilized for all tracing and error reporting.*
+
+**Does the design follow established object-oriented or functional design principles?**  
+[PASS]  
+*Object-Oriented design is adopted, completely separating Parsing logic from Scraping state.*
